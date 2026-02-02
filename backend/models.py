@@ -26,3 +26,9 @@ class Result(SQLModel, table=True):
     value: str
     measured_at: datetime = Field(default_factory=datetime.utcnow)
     order: Optional[LabOrder] = Relationship(back_populates="results")
+
+class User(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    username: str = Field(index=True)
+    hashed_password: str
+    role: str = Field(default="technician")  # admin, technician, doctor
