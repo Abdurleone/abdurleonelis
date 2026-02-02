@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlmodel import Session, select
-from database import engine
+from database import get_session
 from models import User
 
 # Config - in production move to env
@@ -13,7 +13,7 @@ SECRET_KEY = "change-this-secret"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -50,8 +50,8 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
 
 
 @router.post("/register", response_model=dict)
-def register(user: UserCreate):
-    with Session(engine) as session:
+def register(user: UserCreate, session: Session = Depends(get_session)):
+    with session:
         statement = select(User).where(User.username == user.username)
         existing = session.exec(statement).first()
         if existing:
@@ -64,8 +64,8 @@ def register(user: UserCreate):
 
 
 @router.post("/token", response_model=Token)
-def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-    with Session(engine) as session:
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(get_session)):
+    with session:
         statement = select(User).where(User.username == form_data.username)
         user = session.exec(statement).first()
         if not user or not verify_password(form_data.password, user.hashed_password):
@@ -83,7 +83,7 @@ def get_user_by_username(db_session: Session, username: str):
     return db_session.exec(statement).first()
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(token: str = Depends(oauth2_scheme), session: Session = Depends(get_session)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -96,7 +96,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    with Session(engine) as session:
+    with session:
         user = get_user_by_username(session, username)
         if user is None:
             raise credentials_exception

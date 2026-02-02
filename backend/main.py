@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from sqlmodel import SQLModel, Session, select
 from typing import List
 from models import Patient, LabOrder, Result, User
-from database import engine
+from database import engine, get_session
 from auth import router as auth_router, get_current_user, require_role
 from schemas import PatientCreate, PatientResponse, LabOrderCreate, LabOrderResponse, ResultCreate, ResultResponse
 
@@ -17,8 +17,8 @@ def on_startup():
 
 # Patients
 @app.post("/patients/", response_model=PatientResponse)
-def create_patient(patient: PatientCreate, current_user: User = Depends(require_role("admin", "technician"))):
-    with Session(engine) as session:
+def create_patient(patient: PatientCreate, current_user: User = Depends(require_role("admin", "technician")), session: Session = Depends(get_session)):
+    with session:
         db_patient = Patient(**patient.dict())
         session.add(db_patient)
         session.commit()
@@ -27,14 +27,14 @@ def create_patient(patient: PatientCreate, current_user: User = Depends(require_
 
 
 @app.get("/patients/", response_model=List[PatientResponse])
-def list_patients():
-    with Session(engine) as session:
+def list_patients(session: Session = Depends(get_session)):
+    with session:
         return session.exec(select(Patient)).all()
 
 
 @app.get("/patients/{patient_id}", response_model=PatientResponse)
-def get_patient(patient_id: int):
-    with Session(engine) as session:
+def get_patient(patient_id: int, session: Session = Depends(get_session)):
+    with session:
         patient = session.get(Patient, patient_id)
         if not patient:
             raise HTTPException(status_code=404, detail="Patient not found")
@@ -43,8 +43,13 @@ def get_patient(patient_id: int):
 
 # Lab orders
 @app.post("/orders/", response_model=LabOrderResponse)
-def create_order(order: LabOrderCreate, current_user: User = Depends(require_role("admin", "technician"))):
-    with Session(engine) as session:
+def create_order(order: LabOrderCreate, current_user: User = Depends(require_role("admin", "technician")), session: Session = Depends(get_session)):
+    with session:
+        # Verify patient exists
+        patient = session.get(Patient, order.patient_id)
+        if not patient:
+            raise HTTPException(status_code=404, detail="Patient not found")
+        
         db_order = LabOrder(**order.dict())
         session.add(db_order)
         session.commit()
@@ -53,15 +58,15 @@ def create_order(order: LabOrderCreate, current_user: User = Depends(require_rol
 
 
 @app.get("/orders/", response_model=List[LabOrderResponse])
-def list_orders():
-    with Session(engine) as session:
+def list_orders(session: Session = Depends(get_session)):
+    with session:
         return session.exec(select(LabOrder)).all()
 
 
 # Results
 @app.post("/results/", response_model=ResultResponse)
-def create_result(result: ResultCreate, current_user: User = Depends(require_role("admin", "technician"))):
-    with Session(engine) as session:
+def create_result(result: ResultCreate, current_user: User = Depends(require_role("admin", "technician")), session: Session = Depends(get_session)):
+    with session:
         db_result = Result(**result.dict())
         session.add(db_result)
         session.commit()
@@ -70,6 +75,6 @@ def create_result(result: ResultCreate, current_user: User = Depends(require_rol
 
 
 @app.get("/results/", response_model=List[ResultResponse])
-def list_results():
-    with Session(engine) as session:
+def list_results(session: Session = Depends(get_session)):
+    with session:
         return session.exec(select(Result)).all()
