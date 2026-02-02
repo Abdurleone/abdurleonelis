@@ -317,12 +317,181 @@ Creates:
 
 Use these demo credentials to test the API and frontend.
 
+## Tier 3: Deployment & Infrastructure
+
+### Docker Setup
+
+The project is fully containerized with Docker and includes orchestration via Docker Compose.
+
+**Components:**
+- **PostgreSQL 15** — Production-grade database with persistent volumes
+- **FastAPI Backend** — Multi-stage Docker build with health checks
+- **React Frontend** — Nginx-served SPA with static caching
+- **Docker Compose** — Orchestrates all services with networking and environment variables
+
+### Environment Configuration
+
+1. **Copy environment template:**
+
+```bash
+cp .env.example .env
+```
+
+2. **Edit `.env` with your values:**
+
+```bash
+# Database
+DATABASE_URL=postgresql://lis_user:lis_secure_password@postgres:5432/lis_db
+POSTGRES_USER=lis_user
+POSTGRES_PASSWORD=lis_secure_password
+
+# Backend
+SECRET_KEY=your-super-secret-key-change-this-in-production
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+# Frontend
+VITE_API_URL=http://localhost:3000/api
+```
+
+⚠️ **Security:** Change `SECRET_KEY` and `POSTGRES_PASSWORD` to strong, random values in production.
+
+### Running with Docker Compose
+
+**Development (with auto-reload):**
+
+```bash
+docker-compose up
+```
+
+Access the application:
+- **Frontend:** http://localhost:3000
+- **API Docs:** http://localhost:8000/docs
+- **PostgreSQL:** localhost:5432
+
+**Production (optimized builds):**
+
+```bash
+docker-compose -f docker-compose.yml build
+docker-compose up -d
+```
+
+**View logs:**
+
+```bash
+docker-compose logs -f backend
+docker-compose logs -f frontend
+```
+
+**Stop services:**
+
+```bash
+docker-compose down
+```
+
+### Database Initialization
+
+When using PostgreSQL, tables are created automatically on first startup. To seed demo data in a running container:
+
+```bash
+docker-compose exec backend python seed_db.py
+```
+
+### Building Individual Docker Images
+
+**Backend only:**
+
+```bash
+docker build -t lis-backend:latest ./backend
+docker run -p 8000:8000 \
+  -e DATABASE_URL=postgresql://user:pass@host:5432/db \
+  lis-backend:latest
+```
+
+**Frontend only:**
+
+```bash
+docker build -t lis-frontend:latest ./frontend
+docker run -p 3000:3000 lis-frontend:latest
+```
+
+### CI/CD Pipeline
+
+GitHub Actions automatically:
+- ✅ Run backend tests on every push
+- ✅ Lint Python and Node.js code
+- ✅ Build Docker images
+- ✅ Push images to GitHub Container Registry
+- ✅ Run security scans (Trivy)
+
+**Workflow files:** `.github/workflows/ci-cd.yml`
+
+**Triggered on:**
+- Push to `main` or `develop` branches
+- Pull requests to `main` or `develop`
+
+### Deployment Strategies
+
+#### Option 1: Local Docker Compose (Development)
+```bash
+docker-compose up --build
+```
+
+#### Option 2: Kubernetes (Production)
+- Export images to Kubernetes-compatible format
+- Use Helm charts for templating
+- Configure persistent volumes for PostgreSQL
+- Set up ingress for traffic routing
+
+#### Option 3: Cloud Platforms (AWS/GCP/Azure)
+1. Push images to container registry (ECR, GCR, ACR)
+2. Deploy via ECS, Cloud Run, or AKS
+3. Configure managed PostgreSQL (RDS, Cloud SQL, etc.)
+4. Set up CDN for frontend static assets
+
+### Production Checklist
+
+- ☐ Change `SECRET_KEY` to a cryptographically secure random string
+- ☐ Change all default passwords (PostgreSQL, etc.)
+- ☐ Enable HTTPS/TLS (use Let's Encrypt with Nginx/reverse proxy)
+- ☐ Configure PostgreSQL backups and replication
+- ☐ Set up monitoring (Prometheus, Grafana) and alerting
+- ☐ Enable audit logging for compliance
+- ☐ Configure rate limiting to prevent abuse
+- ☐ Set up log aggregation (ELK Stack, Datadog, etc.)
+- ☐ Test disaster recovery and backup restoration
+- ☐ Configure auto-scaling for load handling
+
+### Troubleshooting
+
+**Port already in use:**
+```bash
+# Change port in .env or docker-compose.yml
+docker-compose up -p 8080
+```
+
+**Database connection refused:**
+```bash
+# Wait for PostgreSQL to start
+docker-compose logs postgres
+docker-compose restart postgres
+```
+
+**Frontend not connecting to API:**
+Check `VITE_API_URL` in .env matches your backend URL
+
+**Permission denied on volumes:**
+```bash
+sudo chown -R $USER:$USER ./backend ./frontend
+```
+
 ## Next Steps
 
-- **Database Migration:** Move to PostgreSQL for production.
-- **CI/CD:** GitHub Actions for automated testing and deployment.
-- **Audit Logging:** Track all user actions on sensitive records.
-- **Frontend Deployment:** Build and deploy React frontend.
+- **Monitoring & Observability:** Add Prometheus metrics and Grafana dashboards
+- **Audit Logging:** Track all sensitive operations for compliance
+- **Advanced Caching:** Redis for session and query result caching
+- **API Versioning:** Plan v2 endpoint design with backwards compatibility
+- **Mobile App:** React Native frontend for iOS/Android
+- **Load Testing:** JMeter or k6 for performance benchmarking
 
 ## License
 

@@ -7,11 +7,12 @@ from passlib.context import CryptContext
 from sqlmodel import Session, select
 from database import get_session
 from models import User
+import os
 
-# Config - in production move to env
-SECRET_KEY = "change-this-secret"
+# Configuration from environment variables
+SECRET_KEY = os.getenv("SECRET_KEY", "change-this-secret-key-in-production")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "1440"))
 
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
