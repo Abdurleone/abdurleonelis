@@ -3,6 +3,7 @@
 ## Local Development with Docker Compose
 
 ### 1. First Time Setup
+
 ```bash
 # Copy environment template
 cp .env.example .env
@@ -15,6 +16,7 @@ docker-compose up --build
 ```
 
 ### 2. Access Services
+
 ```
 Frontend:     http://localhost:3000
 API Docs:     http://localhost:8000/docs
@@ -22,9 +24,11 @@ PostgreSQL:   localhost:5432
 ```
 
 ### 3. Seed Demo Data
+
 ```bash
 docker-compose exec backend python seed_db.py
 ```
+
 
 ### 4. View Logs
 ```bash
@@ -36,6 +40,7 @@ docker-compose logs -f backend
 docker-compose logs -f frontend
 docker-compose logs -f postgres
 ```
+
 
 ### 5. Stop Services
 ```bash
@@ -73,11 +78,13 @@ docker-compose down -v --rmi all
 
 ## Environment Variables
 
+
 ### Required
 ```bash
 DATABASE_URL=postgresql://user:password@postgres:5432/lis_db
 SECRET_KEY=your-super-secret-key-min-32-chars-random
 ```
+
 
 ### Optional (has defaults)
 ```bash
@@ -99,6 +106,7 @@ FRONTEND_PORT=3000
 - [ ] Configure backups
 - [ ] Test disaster recovery
 
+
 ### Docker Build for Registry
 ```bash
 # Build images locally
@@ -109,6 +117,7 @@ docker build -t myregistry/lis-frontend:latest ./frontend
 docker push myregistry/lis-backend:latest
 docker push myregistry/lis-frontend:latest
 ```
+
 
 ### Deploy to AWS ECS
 ```bash
@@ -121,6 +130,7 @@ docker push <account-id>.dkr.ecr.us-east-1.amazonaws.com/myimage:latest
 ```
 
 ### Deploy to Google Cloud Run
+
 ```bash
 # Build and push
 gcloud builds submit --tag gcr.io/<project-id>/lis-backend ./backend
@@ -136,6 +146,7 @@ gcloud run deploy lis-backend \
 
 ## Troubleshooting
 
+
 ### Port Already in Use
 ```bash
 # Change port in .env
@@ -146,6 +157,7 @@ FRONTEND_PORT=3001
 lsof -i :8000
 kill -9 <PID>
 ```
+
 
 ### Database Connection Issues
 ```bash
@@ -159,6 +171,7 @@ docker-compose restart postgres
 docker-compose exec postgres psql -U lis_user -d lis_db -c "SELECT version();"
 ```
 
+
 ### Frontend Can't Connect to API
 ```bash
 # Check VITE_API_URL in .env
@@ -167,6 +180,7 @@ docker-compose exec postgres psql -U lis_user -d lis_db -c "SELECT version();"
 # For local: http://localhost:3000/api
 # For production: https://yourdomain.com/api
 ```
+
 
 ### Container Won't Start
 ```bash

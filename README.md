@@ -128,6 +128,7 @@ curl -X POST "http://localhost:8000/auth/register" \
 ```
 
 Response:
+
 ```json
 {
   "username": "lab_tech",
@@ -145,6 +146,7 @@ curl -X POST "http://localhost:8000/auth/token" \
 ```
 
 Response:
+
 ```json
 {
   "access_token": "eyJhbGc...",

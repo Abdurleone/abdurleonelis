@@ -1,6 +1,7 @@
 # Quick Reference — LIS Testing & Demo Data
 
 ## Run Tests
+
 ```bash
 cd backend
 source ../venv/bin/activate
@@ -15,6 +16,7 @@ python seed_db.py
 ```
 
 ## Demo User Credentials
+
 ```
 Admin:
   username: admin
@@ -40,6 +42,7 @@ Doctor:
 - **100% validation** coverage (input validation, foreign keys, status codes)
 
 ## Files Structure
+
 ```
 backend/
 ├── conftest.py           # pytest fixtures & setup

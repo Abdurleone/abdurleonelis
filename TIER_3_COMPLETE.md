@@ -82,6 +82,7 @@ Tier 3 deployment infrastructure is fully implemented with Docker containerizati
 ### 4. Database Support ✅
 
 **PostgreSQL (Production):**
+
 ```python
 DATABASE_URL=postgresql://user:pass@host:5432/db
 ```
@@ -91,6 +92,7 @@ DATABASE_URL=postgresql://user:pass@host:5432/db
 - Automatic table creation via SQLModel
 
 **SQLite (Development):**
+
 ```python
 DATABASE_URL=sqlite:///lab.db
 ```
@@ -174,12 +176,14 @@ abdurleonelis/
 ## Quick Start: Docker Compose
 
 ### 1. Setup environment:
+
 ```bash
 cp .env.example .env
 # Edit .env with your configuration
 ```
 
 ### 2. Start all services:
+
 ```bash
 docker-compose up
 ```
@@ -189,10 +193,12 @@ docker-compose up
 - API Docs: http://localhost:8000/docs
 - PostgreSQL: localhost:5432
 
+
 ### 4. Seed demo data (optional):
 ```bash
 docker-compose exec backend python seed_db.py
 ```
+
 
 ### 5. Stop services:
 ```bash
@@ -200,6 +206,7 @@ docker-compose down
 ```
 
 ## Production Deployment
+
 
 ### Option 1: Local Docker Compose
 ```bash
