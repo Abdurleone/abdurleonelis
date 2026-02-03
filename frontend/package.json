@@ -12,11 +12,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -30,6 +25,6 @@
     ]
   },
   "devDependencies": {
-    "react-scripts": "^0.0.0"
+    "react-scripts": "5.0.1"
   }
 }
