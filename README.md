@@ -54,27 +54,27 @@ README.md             # This file
 cd /root/abdurleonelis
 ```
 
-2. **Create virtual environment:**
+1. **Create virtual environment:**
 
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-3. **Install dependencies:**
+1. **Install dependencies:**
 
 ```bash
 cd backend
 pip install -r requirements.txt
 ```
 
-4. **Run the backend:**
+1. **Run the backend:**
 
 ```bash
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
 
-5. **Open API docs:**
+1. **Open API docs:**
 
 ```
 http://localhost:8000/docs
@@ -240,6 +240,7 @@ curl -s -X GET "http://localhost:8000/results/" | jq .
 The project includes comprehensive test coverage with **pytest**, **fixtures**, and an **in-memory SQLite database** for isolated testing.
 
 **Files:**
+
 - `tests/test_auth.py` — Authentication and RBAC tests (12 tests)
 - `tests/test_endpoints.py` — Integration tests for endpoints (11 tests)
 - `conftest.py` — pytest fixtures for database and authentication
@@ -308,6 +309,7 @@ python seed_db.py
 ```
 
 Creates:
+
 - **4 users** with different roles
   - `admin` / `admin123` (role: admin)
   - `tech1` / `tech123` (role: technician)
@@ -326,6 +328,7 @@ Use these demo credentials to test the API and frontend.
 The project is fully containerized with Docker and includes orchestration via Docker Compose.
 
 **Components:**
+
 - **PostgreSQL 15** — Production-grade database with persistent volumes
 - **FastAPI Backend** — Multi-stage Docker build with health checks
 - **React Frontend** — Nginx-served SPA with static caching
@@ -339,7 +342,7 @@ The project is fully containerized with Docker and includes orchestration via Do
 cp .env.example .env
 ```
 
-2. **Edit `.env` with your values:**
+1. **Edit `.env` with your values:**
 
 ```bash
 # Database
@@ -366,8 +369,9 @@ docker-compose up
 ```
 
 Access the application:
-- **Frontend:** http://localhost:3000
-- **API Docs:** http://localhost:8000/docs
+
+- **Frontend:** <http://localhost:3000>
+- **API Docs:** <http://localhost:8000/docs>
 - **PostgreSQL:** localhost:5432
 
 **Production (optimized builds):**
@@ -419,6 +423,7 @@ docker run -p 3000:3000 lis-frontend:latest
 ### CI/CD Pipeline
 
 GitHub Actions automatically:
+
 - ✅ Run backend tests on every push
 - ✅ Lint Python and Node.js code
 - ✅ Build Docker images
@@ -428,23 +433,27 @@ GitHub Actions automatically:
 **Workflow files:** `.github/workflows/ci-cd.yml`
 
 **Triggered on:**
+
 - Push to `main` or `develop` branches
 - Pull requests to `main` or `develop`
 
 ### Deployment Strategies
 
 #### Option 1: Local Docker Compose (Development)
+
 ```bash
 docker-compose up --build
 ```
 
 #### Option 2: Kubernetes (Production)
+
 - Export images to Kubernetes-compatible format
 - Use Helm charts for templating
 - Configure persistent volumes for PostgreSQL
 - Set up ingress for traffic routing
 
 #### Option 3: Cloud Platforms (AWS/GCP/Azure)
+
 1. Push images to container registry (ECR, GCR, ACR)
 2. Deploy via ECS, Cloud Run, or AKS
 3. Configure managed PostgreSQL (RDS, Cloud SQL, etc.)
@@ -466,12 +475,14 @@ docker-compose up --build
 ### Troubleshooting
 
 **Port already in use:**
+
 ```bash
 # Change port in .env or docker-compose.yml
 docker-compose up -p 8080
 ```
 
 **Database connection refused:**
+
 ```bash
 # Wait for PostgreSQL to start
 docker-compose logs postgres
@@ -482,6 +493,7 @@ docker-compose restart postgres
 Check `VITE_API_URL` in .env matches your backend URL
 
 **Permission denied on volumes:**
+
 ```bash
 sudo chown -R $USER:$USER ./backend ./frontend
 ```

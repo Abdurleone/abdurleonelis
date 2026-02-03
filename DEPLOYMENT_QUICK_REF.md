@@ -29,8 +29,8 @@ PostgreSQL:   localhost:5432
 docker-compose exec backend python seed_db.py
 ```
 
-
 ### 4. View Logs
+
 ```bash
 # All services
 docker-compose logs -f
@@ -41,8 +41,8 @@ docker-compose logs -f frontend
 docker-compose logs -f postgres
 ```
 
-
 ### 5. Stop Services
+
 ```bash
 docker-compose down
 
@@ -78,15 +78,15 @@ docker-compose down -v --rmi all
 
 ## Environment Variables
 
-
 ### Required
+
 ```bash
 DATABASE_URL=postgresql://user:password@postgres:5432/lis_db
 SECRET_KEY=your-super-secret-key-min-32-chars-random
 ```
 
-
 ### Optional (has defaults)
+
 ```bash
 POSTGRES_USER=lis_user
 POSTGRES_PASSWORD=lis_secure_password
@@ -100,14 +100,15 @@ FRONTEND_PORT=3000
 ## Production Deployment
 
 ### Pre-deployment Checklist
+
 - [ ] Create strong `SECRET_KEY` (use: `openssl rand -hex 32`)
 - [ ] Create strong `POSTGRES_PASSWORD`
 - [ ] Enable HTTPS/TLS
 - [ ] Configure backups
 - [ ] Test disaster recovery
 
-
 ### Docker Build for Registry
+
 ```bash
 # Build images locally
 docker build -t myregistry/lis-backend:latest ./backend
@@ -118,8 +119,8 @@ docker push myregistry/lis-backend:latest
 docker push myregistry/lis-frontend:latest
 ```
 
-
 ### Deploy to AWS ECS
+
 ```bash
 # Push to ECR
 aws ecr get-login-password --region us-east-1 | \
@@ -146,8 +147,8 @@ gcloud run deploy lis-backend \
 
 ## Troubleshooting
 
-
 ### Port Already in Use
+
 ```bash
 # Change port in .env
 BACKEND_PORT=8001
@@ -158,8 +159,8 @@ lsof -i :8000
 kill -9 <PID>
 ```
 
-
 ### Database Connection Issues
+
 ```bash
 # Check PostgreSQL logs
 docker-compose logs postgres
@@ -171,8 +172,8 @@ docker-compose restart postgres
 docker-compose exec postgres psql -U lis_user -d lis_db -c "SELECT version();"
 ```
 
-
 ### Frontend Can't Connect to API
+
 ```bash
 # Check VITE_API_URL in .env
 # Must match your backend URL
@@ -181,8 +182,8 @@ docker-compose exec postgres psql -U lis_user -d lis_db -c "SELECT version();"
 # For production: https://yourdomain.com/api
 ```
 
-
 ### Container Won't Start
+
 ```bash
 # Check logs
 docker-compose logs backend
@@ -199,10 +200,12 @@ docker-compose up
 GitHub Actions workflow: `.github/workflows/ci-cd.yml`
 
 **Automatic on:**
+
 - Push to `main` or `develop`
 - Pull requests to `main` or `develop`
 
 **Does:**
+
 - ✅ Run backend tests (pytest)
 - ✅ Run linting (flake8, eslint)
 - ✅ Build Docker images
@@ -210,6 +213,7 @@ GitHub Actions workflow: `.github/workflows/ci-cd.yml`
 - ✅ Security scan (Trivy)
 
 **View results:**
+
 - Go to: GitHub > Actions tab
 - Click workflow run
 - See test results and build logs
@@ -217,16 +221,19 @@ GitHub Actions workflow: `.github/workflows/ci-cd.yml`
 ## Performance Tips
 
 ### Frontend
+
 - Images are multi-stage for minimal size
 - Static assets cached for 1 year
 - Nginx handles SPA routing automatically
 
 ### Backend
+
 - Connection pooling (10 connections to PostgreSQL)
 - Health checks ensure reliability
 - Auto-reload in development
 
 ### Database
+
 - Use managed PostgreSQL in production (RDS, Cloud SQL, etc.)
 - Configure automated backups
 - Monitor query performance

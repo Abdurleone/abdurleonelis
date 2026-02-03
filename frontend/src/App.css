@@ -12,6 +12,48 @@ body {
   justify-content: center;
 }
 
+/* Landing screen (login/register) background */
+.landing {
+  background: linear-gradient(180deg, #001f3f 0%, #003366 100%); /* navy gradient */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 40px;
+}
+
+/* Contrast adjustments for card on landing */
+.landing .card {
+  background: rgba(255, 255, 255, 0.96);
+  color: #04293A;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.landing .card h1,
+.landing .card h2 {
+  color: #001f3f;
+}
+
+.landing a {
+  color: #66b0ff;
+}
+
+.landing button {
+  background: #003d99; /* stronger blue for contrast */
+  color: #fff;
+  font-weight: 600;
+}
+
+.landing button:hover {
+  background: #002f6c;
+}
+
+.landing button:focus {
+  outline: 3px solid rgba(102,176,255,0.22);
+  outline-offset: 2px;
+}
+
 .container {
   width: 100%;
   max-width: 600px;

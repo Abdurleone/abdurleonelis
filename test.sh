@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 cd /root/abdurleonelis/backend
 rm -f lab.db
 source /root/abdurleonelis/venv/bin/activate

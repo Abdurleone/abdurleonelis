@@ -100,8 +100,9 @@ export default function App() {
 
   if (!token) {
     return (
-      <div className="container">
-        <div className="card">
+      <div className="landing">
+        <div className="container">
+          <div className="card">
           <h1>LIS - Lab Information System</h1>
           {page === 'login' ? (
             <>
@@ -165,6 +166,7 @@ export default function App() {
               {message && <p className="error">{message}</p>}
             </>
           )}
+          </div>
         </div>
       </div>
     );
