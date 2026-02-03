@@ -17,7 +17,7 @@ docker-compose up --build
 
 ### 2. Access Services
 
-```
+```plaintext
 Frontend:     http://localhost:3000
 API Docs:     http://localhost:8000/docs
 PostgreSQL:   localhost:5432

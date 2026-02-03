@@ -11,7 +11,7 @@ from faker import Faker
 from models import Patient, LabOrder, Result, User
 from auth import get_password_hash
 from database import engine
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import random
 
 fake = Faker()
@@ -85,7 +85,7 @@ def seed_orders(patients, count_per_patient=2):
                 order = LabOrder(
                     patient_id=patient.id,
                     test_name=random.choice(test_names),
-                    ordered_at=datetime.utcnow() - timedelta(days=random.randint(1, 30))
+                    ordered_at=datetime.now(timezone.utc) - timedelta(days=random.randint(1, 30))
                 )
                 orders.append(order)
                 session.add(order)

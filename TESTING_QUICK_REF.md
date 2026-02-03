@@ -6,18 +6,18 @@
 cd backend
 source ../venv/bin/activate
 pytest tests/ -v
-```
+```plaintext
 
 ## Seed Demo Database
 ```bash
 cd backend
 source ../venv/bin/activate
 python seed_db.py
-```
+```plaintext
 
 ## Demo User Credentials
 
-```
+```plaintext
 Admin:
   username: admin
   password: admin123
@@ -33,9 +33,10 @@ Technician 2:
 Doctor:
   username: doctor1
   password: doc123
-```
+```plaintext
 
 ## Test Coverage
+
 - **23 tests** across 6 test classes
 - **100% authentication** coverage (password, registration, login, RBAC)
 - **100% endpoint** coverage (patients, orders, results)
@@ -60,6 +61,7 @@ backend/
 ```
 
 ## Key Improvements in Tier 2
+
 ✅ Dependency injection for testable architecture
 ✅ In-memory database for isolated tests
 ✅ Comprehensive fixtures for authentication

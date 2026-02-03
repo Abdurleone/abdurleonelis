@@ -103,7 +103,7 @@ Use the Swagger UI to test endpoints interactively.
 
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| POST | `/orders/` | Create a lab order | admin, technician |
+| POST   | `/orders/` | Create a lab order | admin, technician |
 | GET | `/orders/` | List all orders | None |
 
 ### Results
@@ -297,7 +297,7 @@ pytest tests/ --cov=. --cov-report=html
 - **TestResults** (1 test)
   - ✅ Create result with auth
 
-**Total: 23 tests — all passing ✅**
+### Total: 23 tests — all passing ✅
 
 ### Seeding Demo Data
 

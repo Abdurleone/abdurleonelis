@@ -1,4 +1,6 @@
 from fastapi import FastAPI, HTTPException, Depends
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator
 from sqlmodel import SQLModel, Session, select
 from typing import List
 from models import Patient, LabOrder, Result, User
@@ -6,20 +8,22 @@ from database import engine, get_session
 from auth import router as auth_router, get_current_user, require_role
 from schemas import PatientCreate, PatientResponse, LabOrderCreate, LabOrderResponse, ResultCreate, ResultResponse
 
-app = FastAPI(title="LIS - Lab Information System")
-app.include_router(auth_router)
-
-
-@app.on_event("startup")
-def on_startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    # Create database tables on startup
     SQLModel.metadata.create_all(engine)
+    yield
+
+
+app = FastAPI(title="LIS - Lab Information System", lifespan=lifespan)
+app.include_router(auth_router)
 
 
 # Patients
 @app.post("/patients/", response_model=PatientResponse)
 def create_patient(patient: PatientCreate, current_user: User = Depends(require_role("admin", "technician")), session: Session = Depends(get_session)):
     with session:
-        db_patient = Patient(**patient.dict())
+        db_patient = Patient(**patient.model_dump())
         session.add(db_patient)
         session.commit()
         session.refresh(db_patient)
@@ -50,7 +54,7 @@ def create_order(order: LabOrderCreate, current_user: User = Depends(require_rol
         if not patient:
             raise HTTPException(status_code=404, detail="Patient not found")
         
-        db_order = LabOrder(**order.dict())
+        db_order = LabOrder(**order.model_dump())
         session.add(db_order)
         session.commit()
         session.refresh(db_order)
@@ -67,7 +71,7 @@ def list_orders(session: Session = Depends(get_session)):
 @app.post("/results/", response_model=ResultResponse)
 def create_result(result: ResultCreate, current_user: User = Depends(require_role("admin", "technician")), session: Session = Depends(get_session)):
     with session:
-        db_result = Result(**result.dict())
+        db_result = Result(**result.model_dump())
         session.add(db_result)
         session.commit()
         session.refresh(db_result)
